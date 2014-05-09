@@ -8,7 +8,7 @@
 
 ;; Add in your own as you wish:
 
-(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode clojure-mode clojure-test-mode nrepl expand-region)
+(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode clojure-mode clojure-test-mode nrepl expand-region emmet-mode)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -19,6 +19,8 @@
 (delete-selection-mode 1)
 
 (set-face-foreground 'minibuffer-prompt "white")
+
+(add-to-list 'load-path "~/emacs.d/emmet-mode")
 
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
@@ -75,17 +77,3 @@
 (set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
 
 (set-frame-position (selected-frame) 0 0) 
-
-(autoload 'forth-mode "gforth.el")
-(setq auto-mode-alist (cons '("\\.fs\\'" . forth-mode)
-     			    auto-mode-alist))
-(autoload 'forth-block-mode "gforth.el")
-(setq auto-mode-alist (cons '("\\.fb\\'" . forth-block-mode)
-     			    auto-mode-alist))
-(add-hook 'forth-mode-hook (function (lambda ()
-                                       ;; customize variables here:
-                                       (setq forth-indent-level 4)
-                                       (setq forth-minor-indent-level 2)
-                                       (setq forth-hilight-level 3)
-        ;;; ...
-                                       )))
