@@ -78,9 +78,6 @@
    [?c ?o ?n ?s ?o ?l ?e ?. ?l ?o ?g ?\( ?\) ?\; left left])
 (global-set-key (kbd "C-c l") 'console-log)
 
-;; windows font
-;;(set-default-font "-*-Courier New-normal-r-*-*-12-112-96-96-c-*-iso8859-1")
-
 (set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
 
 (set-frame-position (selected-frame) 0 0) 
