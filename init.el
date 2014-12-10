@@ -74,6 +74,10 @@
 
 (remove-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
 
+(setq console-log
+   [?c ?o ?n ?s ?o ?l ?e ?. ?l ?o ?g ?\( ?\) ?\; left left])
+(global-set-key (kbd "C-c l") 'console-log)
+
 ;; windows font
 ;;(set-default-font "-*-Courier New-normal-r-*-*-12-112-96-96-c-*-iso8859-1")
 
