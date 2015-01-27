@@ -82,6 +82,11 @@
 
 (remove-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
 
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<down>") 'shrink-window)
+(global-set-key (kbd "S-C-<up>") 'enlarge-window)
+
 (set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
 
 (set-frame-position (selected-frame) 0 0) 
