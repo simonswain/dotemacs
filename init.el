@@ -67,15 +67,20 @@
 (setq column-number-mode 1)
 (setq flymake-gui-warnings-enabled nil)
 
+(defun console-log ()
+  (interactive)
+  (insert "console.log();")
+  (backward-char 2)
+  (indent-for-tab-command))
+
+(global-set-key (kbd "C-c l") 'console-log)
+
 (defun rt-do-line-comments ()
   (setq comment-start "// ")
   (setq comment-end ""))
 (add-hook 'c-mode-hook 'rt-do-line-comments)
 
 (remove-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
-
-;; windows font
-;;(set-default-font "-*-Courier New-normal-r-*-*-12-112-96-96-c-*-iso8859-1")
 
 (set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
 
