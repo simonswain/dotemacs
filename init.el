@@ -31,6 +31,9 @@
 (load-theme ' tango-dark)
 (set-background-color "black")
 
+(global-whitespace-mode 1)
+(global-set-key (kbd "C-c w") 'whitespace-cleanup)
+
 (auto-fill-mode -1)
 
 ;; Use only spaces (no tabs at all).
@@ -43,19 +46,19 @@
 (require 'nrepl)
 
 (require 'sws-mode)
-(require 'jade-mode)    
+(require 'jade-mode)
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
 
-(global-font-lock-mode t) 
-(show-paren-mode 1) 
-(add-hook 'lisp-mode-hook '(lambda () 
+(global-font-lock-mode t)
+(show-paren-mode 1)
+(add-hook 'lisp-mode-hook '(lambda ()
                              (local-set-key (kbd "RET") 'newline-and-indent)))
 
 ;;(remove-hook 'text-mode-hook 'turn-on-auto-fill)
 
-(setq 
+(setq
  ido-case-fold  t                 ; be case-insensitive
  ido-enable-last-directory-history t ; remember last used dirs
  ido-max-work-directory-list 30   ; should be enough
@@ -89,4 +92,4 @@
 
 (set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
 
-(set-frame-position (selected-frame) 0 0) 
+(set-frame-position (selected-frame) 0 0)
