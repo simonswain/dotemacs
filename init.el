@@ -93,11 +93,7 @@
 
 (set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1")
 
-<<<<<<< HEAD
-(set-frame-position (selected-frame) 0 0) 
+(set-frame-position (selected-frame) 0 0)
 
 (setq initial-scratch-message "")
 (setq initial-major-mode 'text-mode)
-=======
-(set-frame-position (selected-frame) 0 0)
->>>>>>> 73932b27d6fed77dd36e060801fb03ff6674f4a6
