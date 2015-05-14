@@ -8,7 +8,7 @@
 
 ;; Add in your own as you wish:
 
-(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode clojure-mode clojure-test-mode nrepl expand-region emmet-mode)
+(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode expand-region emmet-mode)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -21,7 +21,6 @@
 (set-face-foreground 'minibuffer-prompt "white")
 
 (add-to-list 'load-path "~/emacs.d/emmet-mode")
-
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
 
@@ -82,11 +81,16 @@
 
 (remove-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
 
+(global-hl-line-mode -1)
+
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 
-(set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-15-*-*-*-m-0-iso10646-1")
+(set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1")
 
 (set-frame-position (selected-frame) 0 0) 
+
+(setq initial-scratch-message "")
+(setq initial-major-mode 'text-mode)
