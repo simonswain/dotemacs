@@ -41,9 +41,6 @@
 (global-set-key "\M-n" 'scroll-up-line)
 (global-set-key "\M-p" 'scroll-down-line)
 
-(require 'clojure-mode)
-(require 'nrepl)
-
 (require 'sws-mode)
 (require 'jade-mode)
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
