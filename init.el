@@ -8,12 +8,37 @@
 
 ;; Add in your own as you wish:
 
-(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode expand-region emmet-mode)
+(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode expand-region emmet-mode auto-complete flymake-jshint flymake-cursor nodejs-repl)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+(custom-set-variables
+ '(ediff-split-window-function (quote split-window-horizontally))
+ )
+
+(setenv "NODE_NO_READLINE" "1")
+
+; http://blog.deadpansincerity.com/2011/05/setting-up-emacs-as-a-javascript-editing-environment-for-fun-and-profit/
+
+(require 'auto-complete-config)
+; Make sure we can find the dictionaries
+(add-to-list 'ac-dictionary-directories "~/emacs/auto-complete/dict")
+; Use dictionaries by default
+(setq-default ac-sources (add-to-list 'ac-sources 'ac-source-dictionary))
+(global-auto-complete-mode t)
+; Start auto-completion after 2 characters of a word
+(setq ac-auto-start 2)
+; case sensitivity is important when finding matches
+(setq ac-ignore-case nil)
+
+;;(setq debug-on-error t)
+
+(require 'flymake-jshint)
+(require 'flymake-cursor)
+(add-hook 'js-mode-hook 'flymake-mode)
 
 (mouse-avoidance-mode 'none)
 (delete-selection-mode 1)
@@ -91,7 +116,7 @@
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 
-(set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1")
+(set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1")
 
 (set-frame-position (selected-frame) 0 0)
 
