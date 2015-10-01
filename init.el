@@ -8,7 +8,7 @@
 
 ;; Add in your own as you wish:
 
-(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode expand-region emmet-mode auto-complete flymake-jshint flymake-cursor nodejs-repl)
+(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode expand-region emmet-mode auto-complete flymake-jshint flymake-cursor nodejs-repl flycheck exec-path-from-shell)
   "A list of packages to ensure are installed at launch.")
 
 (dolist (p my-packages)
@@ -40,14 +40,40 @@
 (require 'flymake-cursor)
 (add-hook 'js-mode-hook 'flymake-mode)
 
-(mouse-avoidance-mode 'none)
-(delete-selection-mode 1)
+(setq-default indent-tabs-mode nil)
 
-(set-face-foreground 'minibuffer-prompt "white")
+(load "~/.emacs.d/web-mode.el")
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+(defun my-web-mode-hook ()
+  "Hooks for Web mode."
+  (setq web-mode-markup-indent-offset 2)
+)
+(add-hook 'web-mode-hook  'my-web-mode-hook)
 
-(add-to-list 'load-path "~/emacs.d/emmet-mode")
+;; ;; npm install -g jsxhint
+;; (flycheck-define-checker jsxhint-checker
+;;   "A JSX syntax and style checker based on JSXHint."
+
+;;   :command ("jsxhint" source)
+;;   :error-patterns
+;;   ((error line-start (1+ nonl) ": line " line ", col " column ", " (message) line-end))
+;;   :modes (web-mode))
+;; (add-hook 'web-mode-hook
+;;           (lambda ()
+;;             (when (equal web-mode-content-type "jsx")
+;;               ;; enable flycheck
+;;               (flycheck-select-checker 'jsxhint-checker)
+;;               (flycheck-mode))))
+
+
+(require 'emmet-mode)
 (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
 (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+
+(mouse-avoidance-mode 'none)
+(delete-selection-mode 1)
+(set-face-foreground 'minibuffer-prompt "white")
 
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
