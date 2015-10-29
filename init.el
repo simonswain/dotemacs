@@ -1,58 +1,43 @@
 (require 'package)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-;; Add in your own as you wish:
-
-(defvar my-packages '(starter-kit starter-kit-lisp starter-kit-bindings starter-kit-js sws-mode jade-mode less-css-mode php-mode markdown-mode expand-region emmet-mode)
-  "A list of packages to ensure are installed at launch.")
+(defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous magit smex flycheck))
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 
+
+(require 'smex)
+(global-set-key (kbd "M-x") 'smex)
+
+;;; opts
+
 (mouse-avoidance-mode 'none)
 (delete-selection-mode 1)
-
-(set-face-foreground 'minibuffer-prompt "white")
-
-(add-to-list 'load-path "~/emacs.d/emmet-mode")
-(add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
-(add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
-
-(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
-
-(load-theme ' tango-dark)
-(set-background-color "black")
-
-(global-whitespace-mode 1)
-(global-set-key (kbd "C-c w") 'whitespace-cleanup)
-
-(auto-fill-mode -1)
+(idle-highlight-mode 1)
+(setq column-number-mode 1)
 
 ;; Use only spaces (no tabs at all).
 (setq-default indent-tabs-mode nil)
 
-(global-set-key "\M-n" 'scroll-up-line)
-(global-set-key "\M-p" 'scroll-down-line)
+;; 
+(setq inhibit-splash-screen t)
+(setq initial-scratch-message "")
+(setq initial-major-mode 'text-mode)
 
-(require 'sws-mode)
-(require 'jade-mode)
-(add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
-(add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
+;;; layout
+(load-theme ' tango-dark)
+(set-background-color "black")
 
-
-(global-font-lock-mode t)
-(show-paren-mode 1)
-(add-hook 'lisp-mode-hook '(lambda ()
-                             (local-set-key (kbd "RET") 'newline-and-indent)))
-
-;;(remove-hook 'text-mode-hook 'turn-on-auto-fill)
+;; ido
+(require 'ido)
+(ido-mode t)
 
 (setq
  ido-case-fold  t                 ; be case-insensitive
@@ -63,34 +48,47 @@
  ido-use-url-at-point nil         ; don't use url at point (annoying)
  ido-confirm-unique-completion t) ; wait for RET, even with unique completion
 
-(setq column-number-mode 1)
-(setq flymake-gui-warnings-enabled nil)
+;;; keys
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
+
+(global-set-key (kbd "M-/") 'hippie-expand)
+
+(global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
+(global-set-key (kbd "C-c w") 'whitespace-cleanup)
+(global-set-key (kbd "C-x g") 'magit-status)
 
 (defun console-log ()
   (interactive)
   (insert "console.log();")
   (backward-char 2)
   (indent-for-tab-command))
-
 (global-set-key (kbd "C-c l") 'console-log)
 
-(defun rt-do-line-comments ()
-  (setq comment-start "// ")
-  (setq comment-end ""))
-(add-hook 'c-mode-hook 'rt-do-line-comments)
+;; arrows to change frame
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
 
-(remove-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
+(defun my-paredit-nonlisp ()
+  "Turn on paredit mode for non-lisps."
+  (interactive)
+  (set (make-local-variable 'paredit-space-for-delimiter-predicates)
+       '((lambda (endp delimiter) nil)))
+  (paredit-mode 1))
 
-(global-hl-line-mode -1)
+(require 'flycheck)
 
-(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "S-C-<down>") 'shrink-window)
-(global-set-key (kbd "S-C-<up>") 'enlarge-window)
+(eval-after-load 'js
+  '(progn
+     (define-key js-mode-map "{" 'paredit-open-curly)
+     (define-key js-mode-map "}" 'paredit-close-curly-and-newline)
+     (add-hook 'js-mode-hook 'my-paredit-nonlisp)
+     (setq js-indent-level 2)
+     ;; fixes problem with pretty function font-lock
+     (define-key js-mode-map (kbd ",") 'self-insert-command)
+     ))
 
-(set-default-font "-unknown-Ubuntu Mono-normal-normal-normal-*-22-*-*-*-m-0-iso10646-1")
+(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
 
-(set-frame-position (selected-frame) 0 0)
-
-(setq initial-scratch-message "")
-(setq initial-major-mode 'text-mode)
+(add-hook 'js-mode-hook
+          (lambda () (flycheck-mode t)))
