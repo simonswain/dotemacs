@@ -65,6 +65,11 @@
   (indent-for-tab-command))
 (global-set-key (kbd "C-c l") 'console-log)
 
+(defun rt-do-line-comments ()
+  (setq comment-start "// ")
+  (setq comment-end ""))
+(add-hook 'c-mode-hook 'rt-do-line-comments)
+
 ;; arrows to change frame
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
@@ -83,8 +88,10 @@
      (define-key js-mode-map "{" 'paredit-open-curly)
      (define-key js-mode-map "}" 'paredit-close-curly-and-newline)
      (add-hook 'js-mode-hook 'my-paredit-nonlisp)
+     (global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
      (setq js-indent-level 2)
-     ;; fixes problem with pretty function font-lock
+     (delete-selection-mode 1)
+     ;; fixes problem with pretty font-lock
      (define-key js-mode-map (kbd ",") 'self-insert-command)
      ))
 
@@ -92,6 +99,9 @@
 
 (add-hook 'js-mode-hook
           (lambda () (flycheck-mode t)))
+
+(add-hook 'js-mode-hook
+          (lambda () (local-set-key (kbd "RET") 'newline)))
 
 
 (require 'auto-complete-config)
