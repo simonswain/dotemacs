@@ -6,7 +6,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous magit smex flycheck auto-complete))
+(defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous magit smex flycheck auto-complete less-css-mode))
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -115,4 +115,4 @@
 ; case sensitivity is important when finding matches
 (setq ac-ignore-case nil)
 
-
+(setq css-indent-offset 2)
