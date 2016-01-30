@@ -23,6 +23,16 @@
 (idle-highlight-mode 1)
 (setq column-number-mode 1)
 
+;; don't copy on select
+(setq select-active-regions nil)
+
+;(defun paredit-kill-region-or-backward-word ()
+;  (interactive)
+;  (if (region-active-p)
+;      (kill-region (region-beginning) (region-end))
+;    (paredit-backward-kill-word)))
+;(define-key paredit-mode-map (kbd "M-<backspace>") 'paredit-kill-region-or-backward-word)
+
 ;; Use only spaces (no tabs at all).
 (setq-default indent-tabs-mode nil)
 
@@ -64,6 +74,10 @@
   (backward-char 2)
   (indent-for-tab-command))
 (global-set-key (kbd "C-c l") 'console-log)
+
+(fset 'es6functionify
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 102 117 110 134217826 134217828 134217760 19 123 left 61 62 32 tab] 0 "%d")) arg)))
+(global-set-key (kbd "C-c 6") 'es6functionify)
 
 (defun rt-do-line-comments ()
   (setq comment-start "// ")
