@@ -22,6 +22,7 @@
 (delete-selection-mode 1)
 (idle-highlight-mode 1)
 (setq column-number-mode 1)
+(setq confirm-kill-emacs 'y-or-n-p)
 
 ;; don't copy on select
 (setq select-active-regions nil)
@@ -36,7 +37,7 @@
 ;; Use only spaces (no tabs at all).
 (setq-default indent-tabs-mode nil)
 
-;; 
+;;
 (setq inhibit-splash-screen t)
 (setq initial-scratch-message "")
 (setq initial-major-mode 'text-mode)
@@ -68,12 +69,24 @@
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (global-set-key (kbd "C-x g") 'magit-status)
 
+(global-set-key [f5] 'save-buffer)
+(global-set-key [f8] 'kill-this-buffer)
+
+
 (defun console-log ()
   (interactive)
   (insert "console.log();")
   (backward-char 2)
   (indent-for-tab-command))
 (global-set-key (kbd "C-c l") 'console-log)
+
+(defun clean-and-format ()
+  (interactive)
+  (save-excursion
+    (whitespace-cleanup)
+    (indent-region (point-min) (point-max))
+    ))
+(global-set-key (kbd "C-x j") 'clean-and-format )
 
 (fset 'es6functionify
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([19 102 117 110 134217826 134217828 134217760 19 123 left 61 62 32 tab] 0 "%d")) arg)))
@@ -117,7 +130,6 @@
 (add-hook 'js-mode-hook
           (lambda () (local-set-key (kbd "RET") 'newline)))
 
-
 (require 'auto-complete-config)
 ; Make sure we can find the dictionaries
 (add-to-list 'ac-dictionary-directories "~/emacs/auto-complete/dict")
@@ -130,3 +142,5 @@
 (setq ac-ignore-case nil)
 
 (setq css-indent-offset 2)
+
+(set-face-foreground 'minibuffer-prompt "white")
