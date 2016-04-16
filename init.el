@@ -83,6 +83,13 @@
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (global-set-key (kbd "C-x g") 'magit-status)
 
+(defun revert-buffer-no-confirm ()
+  "Revert buffer without confirmation."
+  (interactive)
+  (revert-buffer t t))
+
+(global-set-key (kbd "C-x r") 'revert-buffer-no-confirm)
+
 (global-set-key [f5] 'save-buffer)
 (global-set-key [f8] 'kill-this-buffer)
 
