@@ -71,6 +71,7 @@
 
 (global-set-key [f5] 'save-buffer)
 (global-set-key [f8] 'kill-this-buffer)
+(global-set-key [f9] 'clean-and-format)
 
 
 (defun console-log ()
