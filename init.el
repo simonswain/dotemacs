@@ -6,7 +6,7 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous magit smex flycheck auto-complete less-css-mode))
+(defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous magit smex flycheck auto-complete less-css-mode php-mode))
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -23,6 +23,20 @@
 (idle-highlight-mode 1)
 (setq column-number-mode 1)
 (setq confirm-kill-emacs 'y-or-n-p)
+(auto-fill-mode -1)
+
+(setq default-tab-width 2)
+(setq c-basic-indent 2)
+
+
+(add-hook 'php-mode-hook 'my-php-mode-hook)
+(defun my-php-mode-hook ()
+  (setq indent-tabs-mode t)
+  (let ((my-tab-width 4))
+    (setq tab-width my-tab-width)
+    (setq c-basic-indent my-tab-width)
+    (set (make-local-variable 'tab-stop-list)
+         (number-sequence my-tab-width 200 my-tab-width))))
 
 ;; don't copy on select
 (setq select-active-regions nil)
@@ -68,6 +82,13 @@
 (global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (global-set-key (kbd "C-x g") 'magit-status)
+
+(defun revert-buffer-no-confirm ()
+  "Revert buffer without confirmation."
+  (interactive)
+  (revert-buffer t t))
+
+(global-set-key (kbd "C-x r") 'revert-buffer-no-confirm)
 
 (global-set-key [f5] 'save-buffer)
 (global-set-key [f8] 'kill-this-buffer)
