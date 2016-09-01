@@ -74,6 +74,8 @@
  ido-confirm-unique-completion t) ; wait for RET, even with unique completion
 
 ;;; keys
+(fset 'yes-or-no-p 'y-or-n-p)
+
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 
@@ -91,9 +93,14 @@
 (global-set-key (kbd "C-x r") 'revert-buffer-no-confirm)
 
 (global-set-key [f5] 'save-buffer)
+(global-set-key [f6] 'flycheck-list-errors)
 (global-set-key [f8] 'kill-this-buffer)
 (global-set-key [f9] 'clean-and-format)
 
+
+(fset 'dup-line
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([1 67108896 down 134217847 25 up] 0 "%d")) arg)))
+(global-set-key (kbd "C-c .") 'dup-line)
 
 (defun console-log ()
   (interactive)
@@ -131,12 +138,22 @@
   (paredit-mode 1))
 
 (require 'flycheck)
+(global-flycheck-mode 1)
+
+(flycheck-define-checker javascript-semistandard
+  "A Javascript code and style checker for the (Semi-)Standard Style."
+  :command ("/home/simon/.nvm/versions/node/v5.10.1/bin/semistandard" "--stdin")
+  :standard-input t
+  :error-patterns
+  ((error line-start "  <text>:" line ":" column ":" (message) line-end))
+  :modes (js-mode js-jsx-mode js2-mode js2-jsx-mode js3-mode))
 
 (eval-after-load 'js
   '(progn
      (define-key js-mode-map "{" 'paredit-open-curly)
      (define-key js-mode-map "}" 'paredit-close-curly-and-newline)
      (add-hook 'js-mode-hook 'my-paredit-nonlisp)
+     (set 'js-switch-indent-offset 2)
      (global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
      (setq js-indent-level 2)
      (delete-selection-mode 1)
@@ -144,13 +161,19 @@
      (define-key js-mode-map (kbd ",") 'self-insert-command)
      ))
 
-(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
 
+(add-hook 'js-mode-hook
+          (lambda ()
+            (flycheck-select-checker 'javascript-semistandard)
+            (flycheck-mode)))
+
+;; npm install -g jshint
 (add-hook 'js-mode-hook
           (lambda () (flycheck-mode t)))
-
 (add-hook 'js-mode-hook
           (lambda () (local-set-key (kbd "RET") 'newline)))
+
+(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
 
 (require 'auto-complete-config)
 ; Make sure we can find the dictionaries
