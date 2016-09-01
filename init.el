@@ -28,15 +28,15 @@
 (setq default-tab-width 2)
 (setq c-basic-indent 2)
 
-
 (add-hook 'php-mode-hook 'my-php-mode-hook)
 (defun my-php-mode-hook ()
-  (setq indent-tabs-mode t)
-  (let ((my-tab-width 4))
-    (setq tab-width my-tab-width)
-    (setq c-basic-indent my-tab-width)
-    (set (make-local-variable 'tab-stop-list)
-         (number-sequence my-tab-width 200 my-tab-width))))
+  "My PHP mode configuration."
+  (setq indent-tabs-mode nil
+        c-default-style "gnu"
+        tab-width 2
+        c-basic-offset 2))
+
+(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
 
 ;; don't copy on select
 (setq select-active-regions nil)
