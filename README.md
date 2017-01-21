@@ -7,7 +7,7 @@ sudo apt-get build-dep emacs24
 cd /tmp
 wget http://ftp.gnu.org/gnu/emacs/emacs-24.5.tar.gz
 tar -xzvf emacs-24.5.tar.gz
-cd emacs-24.5.tar.gz
+cd emacs-24.5
 ./configure
 make
 sudo make install
