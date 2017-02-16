@@ -1,12 +1,13 @@
+;;; package --- Init.el
 (require 'package)
-(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/") t)
+;;(add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous magit smex flycheck auto-complete less-css-mode php-mode))
+(defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous magit smex flycheck auto-complete less-css-mode))
 
 (dolist (p my-packages)
   (when (not (package-installed-p p))
@@ -17,70 +18,41 @@
 (global-set-key (kbd "M-x") 'smex)
 
 ;;; opts
-
 (mouse-avoidance-mode 'none)
 (delete-selection-mode 1)
 (idle-highlight-mode 1)
-(setq column-number-mode 1)
-(setq confirm-kill-emacs 'y-or-n-p)
-(auto-fill-mode -1)
-
-(setq default-tab-width 2)
-(setq c-basic-indent 2)
-
-(add-hook 'php-mode-hook 'my-php-mode-hook)
-(defun my-php-mode-hook ()
-  "My PHP mode configuration."
-  (setq indent-tabs-mode nil
-        c-default-style "gnu"
-        tab-width 2
-        c-basic-offset 2))
-
-(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
-
-;; don't copy on select
-(setq select-active-regions nil)
-
-;(defun paredit-kill-region-or-backward-word ()
-;  (interactive)
-;  (if (region-active-p)
-;      (kill-region (region-beginning) (region-end))
-;    (paredit-backward-kill-word)))
-;(define-key paredit-mode-map (kbd "M-<backspace>") 'paredit-kill-region-or-backward-word)
-
-;; Use only spaces (no tabs at all).
-(setq-default indent-tabs-mode nil)
-
-;;
 (setq inhibit-splash-screen t)
 (setq initial-scratch-message "")
 (setq initial-major-mode 'text-mode)
+(setq column-number-mode 1)
+(setq confirm-kill-emacs 'y-or-n-p)
+(auto-fill-mode -1)
+(setq select-active-regions nil)      ;; don't copy on select
+(setq-default indent-tabs-mode nil)   ;; Use only spaces (no tabs at all).
+(setq tab-width 2)
+(setq c-basic-indent 2)
+(setq css-indent-offset 2)
 
-;;; layout
 (load-theme ' tango-dark)
 (set-background-color "black")
 
-;; ido
 (require 'ido)
 (ido-mode t)
 
 (setq
- ido-case-fold  t                 ; be case-insensitive
+ ido-case-fold  t                    ; be case-insensitive
  ido-enable-last-directory-history t ; remember last used dirs
- ido-max-work-directory-list 30   ; should be enough
- ido-max-work-file-list      50   ; remember many
- ido-use-filename-at-point nil    ; don't use filename at point (annoying)
- ido-use-url-at-point nil         ; don't use url at point (annoying)
- ido-confirm-unique-completion t) ; wait for RET, even with unique completion
+ ido-max-work-directory-list 30      ; should be enough
+ ido-max-work-file-list      50      ; remember many
+ ido-use-filename-at-point nil       ; don't use filename at point (annoying)
+ ido-use-url-at-point nil            ; don't use url at point (annoying)
+ ido-confirm-unique-completion t)    ; wait for RET, even with unique completion
 
 ;;; keys
 (fset 'yes-or-no-p 'y-or-n-p)
-
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
-
 (global-set-key (kbd "M-/") 'hippie-expand)
-
 (global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c w") 'whitespace-cleanup)
 (global-set-key (kbd "C-x g") 'magit-status)
@@ -89,14 +61,7 @@
   "Revert buffer without confirmation."
   (interactive)
   (revert-buffer t t))
-
 (global-set-key (kbd "C-x r") 'revert-buffer-no-confirm)
-
-(global-set-key [f5] 'save-buffer)
-(global-set-key [f6] 'flycheck-list-errors)
-(global-set-key [f8] 'kill-this-buffer)
-(global-set-key [f9] 'clean-and-format)
-
 
 (fset 'dup-line
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([1 67108896 down 134217847 25 up] 0 "%d")) arg)))
@@ -126,6 +91,11 @@
   (setq comment-end ""))
 (add-hook 'c-mode-hook 'rt-do-line-comments)
 
+(global-set-key [f5] 'save-buffer)
+(global-set-key [f6] 'flycheck-list-errors)
+(global-set-key [f8] 'kill-this-buffer)
+(global-set-key [f9] 'clean-and-format)
+
 ;; arrows to change frame
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
@@ -137,12 +107,18 @@
        '((lambda (endp delimiter) nil)))
   (paredit-mode 1))
 
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+
 (require 'flycheck)
 (global-flycheck-mode 1)
 
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(javascript-jshint)))
+
 (flycheck-define-checker javascript-semistandard
   "A Javascript code and style checker for the (Semi-)Standard Style."
-  :command ("/home/simon/.nvm/versions/node/v5.10.1/bin/semistandard" "--stdin")
+  :command ("semistandard" "--stdin")
   :standard-input t
   :error-patterns
   ((error line-start "  <text>:" line ":" column ":" (message) line-end))
@@ -150,28 +126,23 @@
 
 (eval-after-load 'js
   '(progn
-     (define-key js-mode-map "{" 'paredit-open-curly)
+     (define-key js-mode-map "{" 'paredit-open-curly) 
      (define-key js-mode-map "}" 'paredit-close-curly-and-newline)
      (add-hook 'js-mode-hook 'my-paredit-nonlisp)
+     (setq js-indent-level 2)
      (set 'js-switch-indent-offset 2)
      (global-set-key (kbd "C-c C-c") 'comment-or-uncomment-region)
-     (setq js-indent-level 2)
      (delete-selection-mode 1)
-     ;; fixes problem with pretty font-lock
      (define-key js-mode-map (kbd ",") 'self-insert-command)
      ))
-
 
 (add-hook 'js-mode-hook
           (lambda ()
             (flycheck-select-checker 'javascript-semistandard)
             (flycheck-mode)))
 
-;; npm install -g jshint
-(add-hook 'js-mode-hook
-          (lambda () (flycheck-mode t)))
-(add-hook 'js-mode-hook
-          (lambda () (local-set-key (kbd "RET") 'newline)))
+;; (add-hook 'js-mode-hook
+;;           (lambda () (flycheck-mode t)))
 
 (add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
 
@@ -185,7 +156,5 @@
 (setq ac-auto-start 2)
 ; case sensitivity is important when finding matches
 (setq ac-ignore-case nil)
-
-(setq css-indent-offset 2)
 
 (set-face-foreground 'minibuffer-prompt "white")
